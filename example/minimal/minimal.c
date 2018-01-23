@@ -102,8 +102,12 @@ int main(int argc, char *argv[])
     lcb_install_callback3(instance, LCB_CALLBACK_GET, op_callback);
     lcb_install_callback3(instance, LCB_CALLBACK_STORE, op_callback);
 
-    LCB_CMD_SET_KEY(&scmd, "key", strlen("key"));
-    LCB_CMD_SET_VALUE(&scmd, "value", strlen("value"));
+    char *key, *value;
+    key = "key";
+    value = "{\"test\": \"123\"}";
+
+    LCB_CMD_SET_KEY(&scmd, key, strlen(key));
+    LCB_CMD_SET_VALUE(&scmd, value, strlen(value));
     scmd.operation = LCB_SET;
 
     err = lcb_store3(instance, NULL, &scmd);
@@ -116,7 +120,7 @@ int main(int argc, char *argv[])
     lcb_wait(instance);
 
     /* Now fetch the item back */
-    LCB_CMD_SET_KEY(&gcmd, "key", strlen("key"));
+    LCB_CMD_SET_KEY(&gcmd, key, strlen(key));
     err = lcb_get3(instance, NULL, &gcmd);
     if (err != LCB_SUCCESS) {
         die(instance, "Couldn't schedule retrieval operation", err);
